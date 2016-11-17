@@ -1,0 +1,81 @@
+- name: set hostname
+  hostname: name=k8s-master.{{ ansible_default_ipv4.address | regex_replace('\.', '') }}
+
+- name: copy resolv file
+  template: src=resolv.conf dest=/etc/resolv.conf mode=644
+
+- name: init k8s install dir
+  file: path={{ K8S_WORK_DIR }}/{{ item }} owner=root group=root mode=0755 state=directory
+  with_items:
+    - bin
+    - cfg
+    - manifests
+
+- name: init kube-dns works dir
+  file: path={{ DNS_WORKDIR }} owner=root group=root mode=0755 state=directory
+
+- name: Install yum epel-release
+  yum: name=epel-release state=present
+
+- name: install etcd flannel
+  yum: name={{ item }} state=latest
+  with_items:
+    - etcd
+    - flannel
+
+- name: copy etcd config file
+  template: src=etcd.conf dest=/etc/etcd/etcd.conf mode=644
+
+- name: start etcd
+  systemd: name=etcd state=restarted daemon_reload=yes enabled=True
+
+- name: create k8s networks
+  shell: etcdctl mk /atomic.io/network/config '{"Network":"172.17.0.0/16"}'
+  changed_when: false
+  ignore_errors: True
+
+- name: copy k8s-master commands
+  copy: src={{ item }} dest={{ K8S_WORK_DIR }}/bin/{{ item }} owner=root group=root mode=0755
+  with_items:
+    - kube-apiserver
+    - kube-controller-manager
+    - kubectl
+    - kube-dns
+    - kube-scheduler
+
+- name: copy k8s-master config file
+  template: src={{ item }} dest={{ K8S_WORK_DIR }}/cfg/{{ item }} mode=644
+  with_items:
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-dns
+    - kube-scheduler
+
+- name: copy services file
+  template: src={{ item }} dest=/usr/lib/systemd/system/{{ item }} mode=644
+  with_items:
+    - kube-apiserver.service
+    - kube-controller-manager.service
+    - kube-dns.service
+    - kube-scheduler.service
+
+- name: link k8s-master commands
+  file: src={{ K8S_WORK_DIR }}/bin/{{ item }} dest=/usr/bin/ state=link
+  with_items:
+    - kube-apiserver
+    - kube-controller-manager
+    - kubectl
+    - kube-dns
+    - kube-scheduler   
+
+- name: start k8s services and flanneld
+  systemd: name={{ item }} state=restarted daemon_reload=yes enabled=True
+  with_items:
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-scheduler
+    - flanneld
+    - kube-dns
+
+- name: "k8s-master install succuess"
+  debug: msg="k8s-master install succuess"

@@ -1,0 +1,60 @@
+- name: set hostname
+  hostname: name=k8s-node.{{ ansible_default_ipv4.address | regex_replace('\.', '') }}
+
+- name: copy resolv file
+  template: src=resolv.conf dest=/etc/resolv.conf mode=644
+
+- name: init k8s install dir
+  file: path={{ K8S_WORK_DIR }}/{{ item }} owner=root group=root mode=0755 state=directory
+  with_items:
+    - bin
+    - cfg
+    - manifests
+
+- name: Install yum epel-release
+  yum: name=epel-release state=present
+
+- name: install flannel docker
+  yum: name={{ item }} state=latest
+  with_items:
+    - docker
+    - flannel
+
+- name: copy flannel config file
+  template: src=flanneld dest=/etc/sysconfig/flanneld mode=644
+
+- name: start flanneld
+  systemd: name=flanneld state=restarted daemon_reload=yes enabled=True
+
+- name: copy k8s-node commands
+  copy: src={{ item }} dest={{ K8S_WORK_DIR }}/bin/{{ item }} owner=root group=root mode=0755
+  with_items:
+    - kubelet
+    - kube-proxy
+
+- name: copy k8s-node config file
+  template: src={{ item }} dest={{ K8S_WORK_DIR }}/cfg/{{ item }} mode=644
+  with_items:
+    - kubelet
+    - kube-proxy
+
+- name: copy services file
+  template: src={{ item }} dest=/usr/lib/systemd/system/{{ item }} mode=644
+  with_items:
+    - kubelet.service
+    - kube-proxy.service
+
+- name: link k8s-node commands
+  file: src={{ K8S_WORK_DIR }}/bin/{{ item }} dest=/usr/bin/ state=link
+  with_items:
+    - kubelet
+    - kube-proxy
+
+- name: start k8s services and flanneld
+  systemd: name={{ item }} state=restarted daemon_reload=yes enabled=True
+  with_items:
+    - kubelet
+    - kube-proxy
+
+- name: "k8s-node install succuess"
+  debug: msg="k8s-node install succuess"

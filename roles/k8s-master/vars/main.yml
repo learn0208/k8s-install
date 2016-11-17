@@ -1,0 +1,4 @@
+K8S_WORK_DIR: /opt/kubernetes
+CLUSTER_DOMAIN: zpk8s.com
+DNS_SERVER: 192.168.14.254
+DNS_WORKDIR: /var/lib/kube-dns

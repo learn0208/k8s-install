@@ -1,0 +1,14 @@
+安装步骤
+基础环境: master/node: centos 7 mini install
+          ansible-version>2.2
+
+请先修改 roles/{k8s-master,k8s-node}/vars/main.yml 内的变量设定
+
+1. 拷贝 kube-apiserver/kube-controller-manager/kubectl/kube-dns/kube-scheduler k8s-master所需命令至目录 roles/k8s-master/files
+2. 拷贝 kubelet/kube-proxy commands k8s-node所需命令至目录 roles/k8s-node/files dir
+3. 执行 ansible-playbook -i hosts install.yml 完成安装
+4. 执行 ansible k8s-node -i hosts -m shell -a "docker pull larry0208/pause-amd64:3.0;docker tag larry0208/pause-amd64:3.0 gcr.io/google_containers/pause-amd64:3.0;systemctl restart kubelet"
+
+
+Q: 哪里可以获得这些命令kube-apiserver/kube-controller-manager/kubectl/kube-dns/kube-scheduler/kubelet/kube-proxy?
+A: 从这里下载tar.gz包  https://github.com/kubernetes/kubernetes/releases. 解压后可以看到kubernetes/server/kubernetes-server-linux-amd64.tar.gz这个文件,继续解压, 可以得到所需命令kubernetes/server/kubernetes/server/bin/

@@ -1,0 +1,4 @@
+KUBE_DNS_PORT="--dns-port=53"
+KUBE_DNS_DOMAIN="--domain={{ CLUSTER_DOMAIN }}"
+KUBE_DNS_MASTER=--kube-master-url="http://{{ ansible_default_ipv4.address }}:8080"
+KUBE_DNS_ARGS=""

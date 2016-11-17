@@ -1,0 +1,20 @@
+[Unit]
+Description=Kubernetes Kubelet
+After=docker.service
+Requires=docker.service
+
+[Service]
+EnvironmentFile=-{{ K8S_WORK_DIR }}/cfg/kubelet
+ExecStart={{ K8S_WORK_DIR }}/bin/kubelet --pod-manifest-path={{ K8S_WORK_DIR }}/manifests   ${KUBE_LOGTOSTDERR}     \
+                    ${KUBE_LOG_LEVEL}       \
+                    ${NODE_ADDRESS}         \
+                    ${NODE_PORT}            \
+                    ${NODE_HOSTNAME}        \
+                    ${KUBELET_API_SERVER}   \
+                    ${KUBE_ALLOW_PRIV}      \
+                    ${KUBELET_ARGS}
+Restart=on-failure
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target

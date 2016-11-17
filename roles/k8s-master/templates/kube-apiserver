@@ -1,0 +1,51 @@
+# --logtostderr=true: log to standard error instead of files
+KUBE_LOGTOSTDERR="--logtostderr=true"
+
+# --v=0: log level for V logs
+KUBE_LOG_LEVEL="--v=4"
+
+# --etcd-servers=[]: List of etcd servers to watch (http://ip:port), 
+# comma separated. Mutually exclusive with -etcd-config
+KUBE_ETCD_SERVERS="--etcd-servers=http://127.0.0.1:2379"
+
+# --insecure-bind-address=127.0.0.1: The IP address on which to serve the --insecure-port.
+KUBE_API_ADDRESS="--insecure-bind-address=0.0.0.0"
+
+# --insecure-port=8080: The port on which to serve unsecured, unauthenticated access.
+KUBE_API_PORT="--insecure-port=8080"
+
+# --kubelet-port=10250: Kubelet port
+NODE_PORT="--kubelet-port=10250"
+
+# --advertise-address=<nil>: The IP address on which to advertise 
+# the apiserver to members of the cluster.
+KUBE_ADVERTISE_ADDR="--advertise-address=0.0.0.0"
+
+# --allow-privileged=false: If true, allow privileged containers.
+KUBE_ALLOW_PRIV="--allow-privileged=false"
+
+# --service-cluster-ip-range=<nil>: A CIDR notation IP range from which to assign service cluster IPs. 
+# This must not overlap with any IP ranges assigned to nodes for pods.
+KUBE_SERVICE_ADDRESSES="--service-cluster-ip-range=10.10.0.0/16"
+
+# --admission-control="AlwaysAdmit": Ordered list of plug-ins 
+# to do admission control of resources into cluster. 
+# Comma-delimited list of: 
+#   LimitRanger, AlwaysDeny, SecurityContextDeny, NamespaceExists, 
+#   NamespaceLifecycle, NamespaceAutoProvision,
+#   AlwaysAdmit, ServiceAccount, ResourceQuota, DefaultStorageClass
+KUBE_ADMISSION_CONTROL="--admission-control="
+
+# --client-ca-file="": If set, any request presenting a client certificate signed
+# by one of the authorities in the client-ca-file is authenticated with an identity
+# corresponding to the CommonName of the client certificate.
+# KUBE_API_CLIENT_CA_FILE="--client-ca-file=/srv/kubernetes/ca.crt"
+
+# --tls-cert-file="": File containing x509 Certificate for HTTPS.  (CA cert, if any,
+# concatenated after server cert). If HTTPS serving is enabled, and --tls-cert-file
+# and --tls-private-key-file are not provided, a self-signed certificate and key are
+# generated for the public address and saved to /var/run/kubernetes.
+# KUBE_API_TLS_CERT_FILE="--tls-cert-file=/srv/kubernetes/server.cert"
+
+# --tls-private-key-file="": File containing x509 private key matching --tls-cert-file.
+# KUBE_API_TLS_PRIVATE_KEY_FILE="--tls-private-key-file=/srv/kubernetes/server.key"
