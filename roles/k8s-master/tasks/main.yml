@@ -60,7 +60,7 @@
     - kube-scheduler.service
 
 - name: link k8s-master commands
-  file: src={{ K8S_WORK_DIR }}/bin/{{ item }} dest=/usr/bin/ state=link
+  file: src={{ K8S_WORK_DIR }}/bin/{{ item }} dest=/usr/bin/{{ item }} state=link
   with_items:
     - kube-apiserver
     - kube-controller-manager

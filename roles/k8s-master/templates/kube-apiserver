@@ -22,7 +22,7 @@ NODE_PORT="--kubelet-port=10250"
 KUBE_ADVERTISE_ADDR="--advertise-address=0.0.0.0"
 
 # --allow-privileged=false: If true, allow privileged containers.
-KUBE_ALLOW_PRIV="--allow-privileged=false"
+KUBE_ALLOW_PRIV="--allow-privileged=true"
 
 # --service-cluster-ip-range=<nil>: A CIDR notation IP range from which to assign service cluster IPs. 
 # This must not overlap with any IP ranges assigned to nodes for pods.
@@ -34,7 +34,7 @@ KUBE_SERVICE_ADDRESSES="--service-cluster-ip-range=10.10.0.0/16"
 #   LimitRanger, AlwaysDeny, SecurityContextDeny, NamespaceExists, 
 #   NamespaceLifecycle, NamespaceAutoProvision,
 #   AlwaysAdmit, ServiceAccount, ResourceQuota, DefaultStorageClass
-KUBE_ADMISSION_CONTROL="--admission-control="
+KUBE_ADMISSION_CONTROL="--admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ResourceQuota"
 
 # --client-ca-file="": If set, any request presenting a client certificate signed
 # by one of the authorities in the client-ca-file is authenticated with an identity

@@ -1,6 +1,9 @@
 - name: set hostname
   hostname: name=k8s-node.{{ ansible_default_ipv4.address | regex_replace('\.', '') }}
 
+- name: docker-engine repo
+  copy: src=docker.repo dest=/etc/yum.repos.d/
+
 - name: copy resolv file
   template: src=resolv.conf dest=/etc/resolv.conf mode=644
 
@@ -17,7 +20,7 @@
 - name: install flannel docker
   yum: name={{ item }} state=latest
   with_items:
-    - docker
+    - docker-engine
     - flannel
 
 - name: copy flannel config file
@@ -45,7 +48,7 @@
     - kube-proxy.service
 
 - name: link k8s-node commands
-  file: src={{ K8S_WORK_DIR }}/bin/{{ item }} dest=/usr/bin/ state=link
+  file: src={{ K8S_WORK_DIR }}/bin/{{ item }} dest=/usr/bin/{{ item }} state=link
   with_items:
     - kubelet
     - kube-proxy
