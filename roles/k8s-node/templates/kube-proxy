@@ -8,4 +8,4 @@ KUBE_LOG_LEVEL="--v=4"
 NODE_HOSTNAME="--hostname-override={{ ansible_fqdn }}"
 
 # --master="": The address of the Kubernetes API server (overrides any value in kubeconfig)
-KUBE_MASTER="--master=http://{{ API_SERVER }}:{{ API_SERVER_PORT }}"
+KUBE_MASTER="--master=https://{{ API_SERVER }}:{{ API_SERVER_PORT }}"

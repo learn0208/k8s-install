@@ -1,0 +1,33 @@
+- name: load cert vars
+  include_vars: roles/gen-cert/vars/main.yml
+
+- name: Install yum epel-release
+  yum: name=epel-release state=present
+
+- name: install ipvsadm keepalived
+  yum: name={{ item }} state=latest
+  with_items:
+    - ipvsadm
+    - keepalived
+
+- name: copy keepalived base config file
+  template: src=keepalived.conf dest=/etc/keepalived/keepalived.conf mode=644
+
+- name: init keepalived config dirs
+  file: path=/etc/keepalived/conf owner=root group=root mode=0755 state=directory
+
+- name: copy keepalived config file
+  template: src={{ item }} dest=/etc/keepalived/conf/{{ item }} mode=644
+  with_items:
+    - etcd.conf
+    - kube-apiserver.conf
+    - kube-apiserver-secure.conf
+    - kube-dns.conf
+
+- name: start keepalived
+  systemd: name={{ item }} state=restarted daemon_reload=yes enabled=True
+  with_items:
+    - keepalived
+
+- name: "lvs-keepalived install succuess"
+  debug: msg="lvs-keepalived install succuess"

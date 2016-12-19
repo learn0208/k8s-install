@@ -1,6 +1,6 @@
 KUBE_LOGTOSTDERR="--logtostderr=true"
 KUBE_LOG_LEVEL="--v=4"
-KUBE_MASTER="--master={{ ansible_default_ipv4.address }}:8080"
+KUBE_MASTER="--master=http://127.0.0.1:8080"
 
 # --root-ca-file="": If set, this root certificate authority will be included in
 # service account's token secret. This must be a valid PEM-encoded CA bundle.

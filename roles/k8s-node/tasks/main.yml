@@ -1,17 +1,18 @@
+- name: load cert vars
+  include_vars: roles/gen-cert/vars/main.yml
+
 - name: set hostname
   hostname: name=k8s-node.{{ ansible_default_ipv4.address | regex_replace('\.', '') }}
 
 - name: docker-engine repo
   copy: src=docker.repo dest=/etc/yum.repos.d/
 
-- name: copy resolv file
-  template: src=resolv.conf dest=/etc/resolv.conf mode=644
-
 - name: init k8s install dir
   file: path={{ K8S_WORK_DIR }}/{{ item }} owner=root group=root mode=0755 state=directory
   with_items:
     - bin
     - cfg
+    - ssl
     - manifests
 
 - name: Install yum epel-release
@@ -28,6 +29,13 @@
 
 - name: start flanneld
   systemd: name=flanneld state=restarted daemon_reload=yes enabled=True
+
+- name: copy cert to node
+  copy: src={{ CERT_DIR }}/{{ item }} dest={{ K8S_WORK_DIR }}/ssl/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - ca.pem
+    - "{{ hostname }}-worker-key.pem"
+    - "{{ hostname }}-worker.pem"
 
 - name: copy k8s-node commands
   copy: src={{ item }} dest={{ K8S_WORK_DIR }}/bin/{{ item }} owner=root group=root mode=0755
@@ -46,6 +54,7 @@
   with_items:
     - kubelet.service
     - kube-proxy.service
+    - docker.service
 
 - name: link k8s-node commands
   file: src={{ K8S_WORK_DIR }}/bin/{{ item }} dest=/usr/bin/{{ item }} state=link
@@ -58,6 +67,7 @@
   with_items:
     - kubelet
     - kube-proxy
+    - docker
 
 - name: "k8s-node install succuess"
   debug: msg="k8s-node install succuess"

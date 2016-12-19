@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Config
+clusters:
+- name: kubernetes
+  cluster:
+    certificate-authority: {{ K8S_WORK_DIR }}/ssl/ca.pem
+users:
+- name: proxy
+  user:
+    client-certificate: {{ K8S_WORK_DIR }}/ssl/{{ hostname }}-worker.pem
+    client-key: {{ K8S_WORK_DIR }}/ssl/{{ hostname }}-worker-key.pem
+contexts:
+- context:
+    cluster: kubernetes
+    user: proxy
+  name: proxy-to-kubernetes
+current-context: proxy-to-kubernetes

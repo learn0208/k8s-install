@@ -7,7 +7,8 @@ EnvironmentFile=-{{ K8S_WORK_DIR }}/cfg/kube-proxy
 ExecStart={{ K8S_WORK_DIR }}/bin/kube-proxy    ${KUBE_LOGTOSTDERR} \
                     ${KUBE_LOG_LEVEL}   \
                     ${NODE_HOSTNAME}    \
-                    ${KUBE_MASTER}
+                    ${KUBE_MASTER} \
+                    --kubeconfig={{ K8S_WORK_DIR }}/cfg/kube-proxy-config.yaml
 Restart=on-failure
 
 [Install]

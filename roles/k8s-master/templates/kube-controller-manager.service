@@ -6,7 +6,8 @@ Documentation=https://github.com/kubernetes/kubernetes
 EnvironmentFile=-{{ K8S_WORK_DIR }}/cfg/kube-controller-manager
 ExecStart={{ K8S_WORK_DIR }}/bin/kube-controller-manager   ${KUBE_LOGTOSTDERR} \
                                 ${KUBE_LOG_LEVEL}   \
-                                ${KUBE_MASTER}
+                                ${KUBE_MASTER}  \
+                                --service-account-private-key-file={{ K8S_WORK_DIR }}/ssl/apiserver-key.pem  --root-ca-file={{ K8S_WORK_DIR }}/ssl/ca.pem
 Restart=on-failure
 
 [Install]

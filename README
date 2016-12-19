@@ -2,7 +2,9 @@
 基础环境: master/node: centos 7 mini install
           ansible-version>2.2
 
-请先修改 roles/{k8s-master,k8s-node}/vars/main.yml 内的变量设定
+首先搭建etcd服务,单机/集群模式,根据集群IP/etcd服务IP修改变量设定
+
+请先修改 roles/{k8s-master,k8s-node,gen-cert,lvs-keep}/vars/main.yml 内的变量设定
 
 1. 拷贝 kube-apiserver/kube-controller-manager/kubectl/kube-dns/kube-scheduler k8s-master所需命令至目录 roles/k8s-master/files
 2. 拷贝 kubelet/kube-proxy commands k8s-node所需命令至目录 roles/k8s-node/files dir

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Config
+clusters:
+- name: kubernetes
+  cluster:
+    certificate-authority: {{ K8S_WORK_DIR }}/ssl/ca.pem
+users:
+- name: kubelet
+  user:
+    client-certificate: {{ K8S_WORK_DIR }}/ssl/{{ hostname }}-worker.pem
+    client-key: {{ K8S_WORK_DIR }}/ssl/{{ hostname }}-worker-key.pem
+contexts:
+- context:
+    cluster: kubernetes
+    user: kubelet
+  name: kubelet-to-kubernetes
+current-context: kubelet-to-kubernetes

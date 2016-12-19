@@ -7,7 +7,7 @@ KUBE_LOGTOSTDERR="--logtostderr=true"
 # --v=0: log level for V logs
 KUBE_LOG_LEVEL="--v=4"
 
-KUBE_MASTER="--master={{ ansible_default_ipv4.address }}:8080"
+KUBE_MASTER="--master=127.0.0.1:8080"
 
 # Add your own!
 KUBE_SCHEDULER_ARGS=""
